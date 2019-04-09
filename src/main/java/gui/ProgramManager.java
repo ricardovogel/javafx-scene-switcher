@@ -7,10 +7,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ProgramManager extends Application {
+    static boolean testingMode = true;
     private static Stage primaryStage;
     private static Map<Scenes, ProgramScene> scenes = new HashMap<>();
 
+    public static Map<Scenes, ProgramScene> getScenes() {
+        return scenes;
+    }
+
     public static void main(final String... args) {
+        boolean testingMode = false;
+        for (String string : args) {
+            if (string.equals("testingMode")) {
+                testingMode = true;
+            }
+        }
+        ProgramManager.testingMode = testingMode;
         launch(args);
     }
 
@@ -27,6 +39,10 @@ public class ProgramManager extends Application {
         }
     }
 
+    static void putScene(Scenes sceneEnum, ProgramScene sceneObject) {
+        scenes.put(sceneEnum, sceneObject);
+    }
+
     public void start(Stage stage) {
         primaryStage = stage;
 
@@ -38,16 +54,16 @@ public class ProgramManager extends Application {
         openScene(GUIConfig.FIRSTSCENE);
 
         primaryStage.setResizable(GUIConfig.IS_RESIZABLE);
-        primaryStage.show();
+        if (testingMode) {
+            testingMode = false;
+        } else {
+            primaryStage.show();
+        }
     }
 
     private void generateScenes() {
         new Scene0();
         new Scene1();
-    }
-
-    static void putScene(Scenes sceneEnum, ProgramScene sceneObject){
-        scenes.put(sceneEnum, sceneObject);
     }
 
     private void addCSS(String path) {
